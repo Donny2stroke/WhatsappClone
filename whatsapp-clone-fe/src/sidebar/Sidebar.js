@@ -22,6 +22,7 @@ const Sidebar = () =>{
                     <IconButton>
                         <MoreVertIcon/>
                     </IconButton>
+                    
                 </div>
             </div>
         </div>
