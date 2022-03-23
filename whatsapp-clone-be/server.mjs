@@ -1,12 +1,24 @@
 import express from "express";
 import mongoose from "mongoose";
 import Messages from "./model/dbMessages.mjs";
+import cors from "cors"
+import Pusher from "pusher";
+
+const pusher = new Pusher({
+    appId: "1366134",
+    key: "4d8d1056a1b8902a2444",
+    secret: "8b6c1a38f09aa30671ab",
+    cluster: "eu",
+    useTLS: true
+});
 
 const app = express()
 const port = process.env.PORT || 9000;
 
 //middleware già scritto per l'elaborazione dei json
 app.use(express.json())
+//middleware cors
+app.use(cors())
 
 //DATABASE
 const connectionDbUrl = "mongodb+srv://admin:Igb9ACZoFLVhcb00@cluster0.klh0p.mongodb.net/whatsappwebdb?retryWrites=true&w=majority"
@@ -23,7 +35,17 @@ db.once("open",  () =>{
     const changeStream = msgCollection.watch()
     //l'evento change lo lancia direttamente il db di mongo
     changeStream.on("change", (change) =>{
-        console.log(change)
+        if(change.operationType === 'insert'){
+            const record = change.fullDocument
+            pusher.trigger("messages", "inserted", {
+                'name'      : record.name,
+                'message'   : record.message,
+                'timestamp' : record.timestamp,
+                'received'  : record.received
+            });
+        }else{
+            console.log("Non è stata fatta una insert")
+        }
     })
 })
 
