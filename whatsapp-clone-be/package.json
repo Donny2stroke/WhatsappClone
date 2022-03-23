@@ -1,0 +1,23 @@
+{
+  "name": "whatsapp-clone-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Donny2stroke/WhatsappClone.git"
+  },
+  "author": "Claudio D'Onofrio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Donny2stroke/WhatsappClone/issues"
+  },
+  "homepage": "https://github.com/Donny2stroke/WhatsappClone#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.2.8"
+  }
+}
