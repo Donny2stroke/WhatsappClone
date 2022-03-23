@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AttachFile from '@mui/icons-material/AttachFile';
 import MoreVert from '@mui/icons-material/MoreVert';
 import InsertEmoticon from '@mui/icons-material/InsertEmoticon';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from "../axios"
 
 const Chat = ({messages}) =>{
