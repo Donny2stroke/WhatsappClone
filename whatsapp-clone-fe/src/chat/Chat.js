@@ -8,12 +8,14 @@ import InsertEmoticon from '@mui/icons-material/InsertEmoticon';
 import { useState } from 'react';
 import axios from "../axios"
 import { useNavigate, useParams } from 'react-router-dom';
+import { useStateValue } from '../StateProvider'
 
 const Chat = ({messages}) =>{
     const {roomId} = useParams()
     const [roomName, setRoomName] = useState("")
     const [lastSeen, setLastSeen] = useState("Visto l'ultima volta...")
     const [input, setInput]= useState("")
+    const [{user}, dispatch] = useStateValue()
     const history = useNavigate()
 
     useEffect(()=>{
@@ -34,9 +36,9 @@ const Chat = ({messages}) =>{
         console.log(new Date())
         await axios.post("/api/v1/messages", {
             message :input,
-            name : "Claudio",
+            name : user?.displayName,
             timestamp : new Date(),
-            received : true
+            uid : user?.uid
         }).then()
         setInput("")
     }
@@ -64,7 +66,7 @@ const Chat = ({messages}) =>{
             <div className='chatBody'>
                 {messages.map((message) => {
                     return(
-                        <p key={message._id} className={`chatMessage ${message.received && "chatMessaggioInviato"}`}>
+                        <p key={message._id} className={`chatMessage ${message.uid === user?.uid && "chatMessaggioInviato"}`}>
                             <span className='chatNome'>
                                 {message.name}
                             </span>
