@@ -13,7 +13,7 @@ const SidebarChat = ({room}) =>{
         let ultimoMessaggio = (room?.messages 
             && room.messages[room.messages.length -1]
             && room.messages[room.messages.length -1].message || "-")
-        let messaggioTroncato = ultimoMessaggio.length > 5 ? `${ultimoMessaggio.substr(0,5)}...` : ultimoMessaggio
+        let messaggioTroncato = ultimoMessaggio.length > 20 ? `${ultimoMessaggio.substr(0,5)}...` : ultimoMessaggio
         setUltimoMessaggio(messaggioTroncato)
     },[])
     

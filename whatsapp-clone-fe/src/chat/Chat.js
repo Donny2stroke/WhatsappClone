@@ -9,34 +9,59 @@ import { useState } from 'react';
 import axios from "../axios"
 import { useNavigate, useParams } from 'react-router-dom';
 import { useStateValue } from '../StateProvider'
+import Pusher from 'pusher-js'
 
-const Chat = ({messages}) =>{
+const Chat = () =>{
     const {roomId} = useParams()
     const [roomName, setRoomName] = useState("")
     const [lastSeen, setLastSeen] = useState("")
+
+    const [lastMessage, setLastMessage] = useState("")
+    const [messages, setMessages] = useState([])
+
+
     const [input, setInput]= useState("")
     const [{user}, dispatch] = useStateValue()
     const history = useNavigate()
+
+    useEffect(() =>{
+        var pusher = new Pusher('4d8d1056a1b8902a2444', {
+        cluster: 'eu'
+        });
+
+        var channel = pusher.subscribe(`room_${roomId}`);
+        channel.bind('inserted', function(newMessage) {
+        setMessages([...messages, newMessage])
+        });
+        return()=>{
+        channel.unbind_all()
+        channel.unsubscribe()
+        }
+    }, [messages])
 
     useEffect(()=>{
         if(roomId){
            axios.get(`/api/v1/rooms/${roomId}`).then((res)=>{
               let room = res.data.room
               setRoomName(room && room.name)
+              axios.get(`api/v1/rooms/${roomId}/messages`).then((res)=>{
+                  setMessages(res.data)
+              })
               let lastMessage = messages[messages.length -1]
               setLastSeen(lastMessage?.timestamp)
+
            }).catch((err)=>{
                setLastSeen("")
                setRoomName("")
                history("/")
            })
         }
-    }, [roomId, messages])
+    }, [roomId])
 
     const sendMessage = async (e) =>{
         e.preventDefault();
         console.log(new Date())
-        await axios.post("/api/v1/messages", {
+        await axios.post(`/api/v1/rooms/${roomId}/messages`, {
             message :input,
             name : user?.displayName,
             timestamp : new Date(),
@@ -51,7 +76,7 @@ const Chat = ({messages}) =>{
                 <Avatar/>
                 <div className='chatHeaderInfo'>
                     <h3>Nome: {roomName}</h3>
-                    <p>Ultimo messaggio il: {new Date(lastSeen).toLocaleString()}</p>
+                    <p>Ultimo messaggio il: {lastMessage?.timestamp ? new Date(lastMessage?.timestamp ).toLocaleString() : ""}</p>
                 </div>
                 <div className='chatHeaderRight'>
                     <IconButton>

@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import Messages from "./model/dbMessages.mjs";
+//import Messages from "./model/dbMessages.mjs";
 import Rooms from "./model/dbRooms.mjs";
 import cors from "cors"
 import Pusher from "pusher";
@@ -32,20 +32,30 @@ mongoose.connect(connectionDbUrl, {useNewUrlParser: true, useUnifiedTopology: tr
 const db = mongoose.connection
 db.once("open",  () =>{
     console.log("Connessione al db avvenuta con successo")
-    const msgCollection = db.collection("messagecontents")
-    const changeStream = msgCollection.watch()
+
+
+    const msgRoom = db.collection("rooms")
+    var filter = []
+    var options = {fullDocument:"updateLookup"}
+    const changeStream = msgRoom.watch(filter, options)
+
+
+
+
     //l'evento change lo lancia direttamente il db di mongo
     changeStream.on("change", (change) =>{
-        if(change.operationType === 'insert'){
-            const record = change.fullDocument
-            pusher.trigger("messages", "inserted", {
-                'name'      : record.name,
-                'message'   : record.message,
-                'timestamp' : record.timestamp,
-                'received'  : record.received
+        if(change.operationType === 'update'){
+            let messages = change.fullDocument.messages
+            let roomId = change.fullDocument._id
+            let lastMessage = messages[messages.length -1]
+            pusher.trigger(`room_${roomId}`, "inserted", {
+                'name'      : lastMessage.name,
+                'message'   : lastMessage.message,
+                'timestamp' : lastMessage.timestamp,
+                'uid'       : lastMessage.uid
             });
         }else{
-            console.log("Non è stata fatta una insert")
+            console.log("Non è stata fatta una update")
         }
     })
 })
@@ -55,30 +65,26 @@ app.get('/', (req, res) => {
     res.status(200).send('Benvenuto sul server')
 })
 
-app.get('/api/v1/messages/sync', (req, res) => {
-    Messages.find((err, data)=>{
-        if(err){
-            res.status(500).send(err)
-        }else{
-            res.status(201).send(data)
-        }
-    })
-})
 
-app.post('/api/v1/messages', (req, res)=>{
-    const dbMessage = req.body
+//ROOMS
+//GET  - api/v1/rooms
+//POST - api/v1/rooms
+//GET  - api/v1/rooms/:id
 
-    Messages.create(dbMessage, (err, data)=>{
-        if(err){
-            res.status(500).send(err)
-        }else{
-            res.status(201).send(data)
-        }
-    })
-})
-
-app.get('/api/v1/rooms/sync', (req, res) => {
+app.get('/api/v1/rooms', (req, res) => {
     Rooms.find((err, data)=>{
+        if(err){
+            res.status(500).send(err)
+        }else{
+            res.status(201).send(data)
+        }
+    })
+})
+
+app.post('/api/v1/rooms', (req, res)=>{
+    const dbRoom = req.body
+
+    Rooms.create(dbRoom, (err, data)=>{
         if(err){
             res.status(500).send(err)
         }else{
@@ -100,17 +106,58 @@ app.get('/api/v1/rooms/:id', (req, res) => {
     })
 })
 
-app.post('/api/v1/rooms', (req, res)=>{
-    const dbRoom = req.body
 
-    Rooms.create(dbRoom, (err, data)=>{
-        if(err){
-            res.status(500).send(err)
+
+//MESSAGES
+//GET  - api/v1/rooms/:id/messages
+//POST - api/v1/rooms/:id/messages
+
+app.get('/api/v1/rooms/:id/messages', (req, res) => {
+    const roomId = req.params.id
+    Rooms.findById(roomId)
+    .then((room)=>{
+        if(!room){
+            res.status(404).json({
+                messages:"Stanza non trovata"
+            })
         }else{
-            res.status(201).send(data)
+            res.status(200).send(room.messages)
         }
+    }).catch( err => { 
+        res.status(404).json({
+            messages:"Stanza non trovata"
+        })
     })
 })
+
+
+app.post('/api/v1/rooms/:id/messages', (req, res)=>{
+    const dbMessage = req.body
+    const roomId = req.params.id
+    Rooms.findById(roomId)
+    .then((room)=>{
+        if(!room){
+            res.status(404).json({
+                messages:"Stanza non trovata"
+            })
+        }else{
+            room.messages.push(dbMessage)
+            room.save(err =>{
+                if(err) res.status(500).send(err)
+                else res.status(200).send(dbMessage)
+            })
+        }
+    }).catch( err => { 
+        res.status(500).json({
+            messages:"Errore id"
+        })
+    })
+})
+
+
+
+
+
 
 
 

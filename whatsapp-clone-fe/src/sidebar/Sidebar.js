@@ -17,7 +17,7 @@ const Sidebar = () =>{
     const [{user}, dispatch] = useStateValue()
 
     useEffect(()=>{
-        axios.get("/api/v1/rooms/sync").then((response) =>{
+        axios.get("/api/v1/rooms").then((response) =>{
             setRooms(response.data)
         })
     },[])

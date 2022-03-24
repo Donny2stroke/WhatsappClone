@@ -15,7 +15,7 @@ function App() {
   const [{user}, dispatch] = useStateValue()
 
 
-  useEffect(() =>{
+  /*useEffect(() =>{
     axios.get("/api/v1/messages/sync").then(response =>{
       setMessages(response.data)
     })
@@ -34,7 +34,9 @@ function App() {
       channel.unbind_all()
       channel.unsubscribe()
     }
-  }, [messages])
+  }, [messages])*/
+
+
   return (
     <div className="app">
 
@@ -47,7 +49,7 @@ function App() {
             <Routes>
               <Route path="/stanza/:roomId" element={
                 <>
-                <Chat messages={messages}/>
+                <Chat />
                 </>
               }/>
               <Route path="/" element={
