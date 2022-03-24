@@ -4,6 +4,7 @@ import {auth, provider} from "../firebase"
 import {signInWithPopup} from "firebase/auth"
 import { useStateValue } from '../StateProvider'
 import { actionTypes } from '../reducer'
+import { saveToLocalStorage } from '../localStore'
 
 const Login = ({messages}) =>{
     const [{}, dispatch] = useStateValue()
@@ -13,6 +14,7 @@ const Login = ({messages}) =>{
                 type: actionTypes.SET_USER,
                 user: result.user
             })
+            saveToLocalStorage("user", result.user)
         }).catch((error)=>{
             console.log(error)
         })

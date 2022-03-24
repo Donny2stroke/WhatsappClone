@@ -1,6 +1,6 @@
 
 export const initialState = {
-    user : null
+    user : localStorage.getItem("user")
 }
 
 export const actionTypes = {

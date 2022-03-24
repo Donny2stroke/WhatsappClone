@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import axios from "./axios"
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { useStateValue } from './StateProvider'
+import {Avatar, IconButton } from '@mui/material';
+import { loadFromLocalStorage } from './localStore'
 
 function App() {
   const [messages, setMessages] = useState([])
@@ -48,7 +50,19 @@ function App() {
                 <Chat messages={messages}/>
                 </>
               }/>
-              <Route path="/" element={<h1>DASHBOARD</h1>}/>
+              <Route path="/" element={
+                <div className='infoCenter'>
+                    <div className='infoCenterItem'>
+                      <Avatar src={loadFromLocalStorage("user")?.photoURL}/>
+                    </div>
+                    <div className='infoCenterItem'>
+                      <h3>{loadFromLocalStorage("user")?.displayName}</h3>
+                    </div>
+                    <div className='infoCenterItem'>
+                      Seleziona una Chat
+                    </div>
+                </div>
+              }/>
             </Routes>
           </Router>
           
