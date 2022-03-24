@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import Messages from "./model/dbMessages.mjs";
+import Rooms from "./model/dbRooms.mjs";
 import cors from "cors"
 import Pusher from "pusher";
 
@@ -75,6 +76,43 @@ app.post('/api/v1/messages', (req, res)=>{
         }
     })
 })
+
+app.get('/api/v1/rooms/sync', (req, res) => {
+    Rooms.find((err, data)=>{
+        if(err){
+            res.status(500).send(err)
+        }else{
+            res.status(201).send(data)
+        }
+    })
+})
+
+app.get('/api/v1/rooms/:id', (req, res) => {
+    const roomId = req.params.id
+    Rooms.findById(roomId).then((room)=>{
+        if(!room){
+            res.status(404).json({message:"Stanza non trovata"})
+        }else{
+            res.status(200).json({room:room})
+        }
+    }).catch((err)=>{
+        res.status(500).json({message:"Errore ID"})
+    })
+})
+
+app.post('/api/v1/rooms', (req, res)=>{
+    const dbRoom = req.body
+
+    Rooms.create(dbRoom, (err, data)=>{
+        if(err){
+            res.status(500).send(err)
+        }else{
+            res.status(201).send(data)
+        }
+    })
+})
+
+
 
 app.listen(port, ()=>{
     console.log(`Server in ascolto sulla porta ${port}`)

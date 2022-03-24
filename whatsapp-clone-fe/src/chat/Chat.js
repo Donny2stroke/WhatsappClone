@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Chat.css'
 import {Avatar, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -7,9 +7,21 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import InsertEmoticon from '@mui/icons-material/InsertEmoticon';
 import { useState } from 'react';
 import axios from "../axios"
+import { useParams } from 'react-router-dom';
 
 const Chat = ({messages}) =>{
+    const {roomId} = useParams()
+    const [roomName, setRoomName] = useState("")
     const [input, setInput]= useState("")
+
+    useEffect(()=>{
+        if(roomId){
+           axios.get(`/api/v1/rooms/${roomId}`).then((res)=>{
+              let room = res.data.room
+              setRoomName(room && room.name)
+           })
+        }
+    }, [roomId])
 
     const sendMessage = async (e) =>{
         e.preventDefault();
@@ -27,7 +39,7 @@ const Chat = ({messages}) =>{
             <div className='chatHeader'>
                 <Avatar/>
                 <div className='chatHeaderInfo'>
-                    <h3>Nome</h3>
+                    <h3>Nome: {roomName}</h3>
                     <p>ultima volta online</p>
                 </div>
                 <div className='chatHeaderRight'>
