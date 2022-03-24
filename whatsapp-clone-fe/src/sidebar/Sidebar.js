@@ -7,10 +7,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import {Avatar, IconButton } from '@mui/material';
 import SidebarChat from './SidebarChat';
 import axios from "../axios"
+import { useStateValue } from '../StateProvider'
 
 const Sidebar = () =>{
 
     const [rooms, setRooms] = useState([])
+
+    const [{user}, dispatch] = useStateValue()
 
     useEffect(()=>{
         axios.get("/api/v1/rooms/sync").then((response) =>{
@@ -35,7 +38,7 @@ const Sidebar = () =>{
             <div className='sidebarHeader'>
                 <div className='sidebarHeaderLeft'>
                     <IconButton>
-                        <Avatar src="https://www.sapereambiente.it/wp-content/uploads/2020/05/Bradipo-gigante.jpeg"/>
+                        <Avatar src={user.photoURL}/>
                     </IconButton>
                 </div>
                 <div className='sidebarHeaderRight'> 

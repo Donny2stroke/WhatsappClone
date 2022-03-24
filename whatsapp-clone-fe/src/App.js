@@ -1,13 +1,16 @@
-import './App.css';
-import Sidebar from './sidebar/Sidebar';
-import Chat from './chat/Chat';
+import './App.css'
+import Sidebar from './sidebar/Sidebar'
+import Chat from './chat/Chat'
+import Login from './auth/Login'
 import Pusher from 'pusher-js'
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import axios from "./axios"
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { useStateValue } from './StateProvider'
 
 function App() {
   const [messages, setMessages] = useState([])
+  const [{user}, dispatch] = useStateValue()
 
 
   useEffect(() =>{
@@ -32,20 +35,25 @@ function App() {
   }, [messages])
   return (
     <div className="app">
-      <div className="body">
-        <Router>
-          <Sidebar/>
-          <Routes>
-            <Route path="/stanza/:roomId" element={
-              <>
-              <Chat messages={messages}/>
-              </>
-            }/>
-            <Route path="/" element={<h1>DASHBOARD</h1>}/>
-          </Routes>
-        </Router>
-        
-      </div>
+
+      {!user ? (
+        <Login></Login>
+      ) : (
+        <div className="body">
+          <Router>
+            <Sidebar/>
+            <Routes>
+              <Route path="/stanza/:roomId" element={
+                <>
+                <Chat messages={messages}/>
+                </>
+              }/>
+              <Route path="/" element={<h1>DASHBOARD</h1>}/>
+            </Routes>
+          </Router>
+          
+        </div>
+      )}
     </div>
   );
 }
