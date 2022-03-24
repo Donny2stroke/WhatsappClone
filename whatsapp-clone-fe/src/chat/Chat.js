@@ -7,28 +7,35 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import InsertEmoticon from '@mui/icons-material/InsertEmoticon';
 import { useState } from 'react';
 import axios from "../axios"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Chat = ({messages}) =>{
     const {roomId} = useParams()
     const [roomName, setRoomName] = useState("")
+    const [lastSeen, setLastSeen] = useState("Visto l'ultima volta...")
     const [input, setInput]= useState("")
+    const history = useNavigate()
 
     useEffect(()=>{
         if(roomId){
            axios.get(`/api/v1/rooms/${roomId}`).then((res)=>{
               let room = res.data.room
               setRoomName(room && room.name)
+           }).catch((err)=>{
+               setLastSeen("")
+               setRoomName("")
+               history("/")
            })
         }
     }, [roomId])
 
     const sendMessage = async (e) =>{
         e.preventDefault();
+        console.log(new Date())
         await axios.post("/api/v1/messages", {
             message :input,
             name : "Claudio",
-            timestamp : "Now",
+            timestamp : new Date(),
             received : true
         }).then()
         setInput("")
@@ -40,7 +47,7 @@ const Chat = ({messages}) =>{
                 <Avatar/>
                 <div className='chatHeaderInfo'>
                     <h3>Nome: {roomName}</h3>
-                    <p>ultima volta online</p>
+                    <p>{lastSeen}</p>
                 </div>
                 <div className='chatHeaderRight'>
                     <IconButton>
@@ -63,7 +70,7 @@ const Chat = ({messages}) =>{
                             </span>
                             {message.message}
                             <span className='chatTimestamp'>
-                                {message.timestamp}
+                                {new Date(message.timestamp).toLocaleString()}
                             </span>
                         </p>
                     )

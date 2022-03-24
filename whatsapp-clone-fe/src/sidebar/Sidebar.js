@@ -8,6 +8,7 @@ import {Avatar, IconButton } from '@mui/material';
 import SidebarChat from './SidebarChat';
 import axios from "../axios"
 import { useStateValue } from '../StateProvider'
+import { loadFromLocalStorage } from '../localStore'
 
 const Sidebar = () =>{
 
@@ -38,8 +39,9 @@ const Sidebar = () =>{
             <div className='sidebarHeader'>
                 <div className='sidebarHeaderLeft'>
                     <IconButton>
-                        <Avatar src={user.photoURL}/>
+                        <Avatar src={loadFromLocalStorage("user")?.photoURL}/>
                     </IconButton>
+                    {loadFromLocalStorage("user")?.displayName}
                 </div>
                 <div className='sidebarHeaderRight'> 
                     <IconButton>

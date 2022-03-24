@@ -96,7 +96,7 @@ app.get('/api/v1/rooms/:id', (req, res) => {
             res.status(200).json({room:room})
         }
     }).catch((err)=>{
-        res.status(500).json({message:"Errore ID"})
+        res.status(404).json({message:"Errore ID"})
     })
 })
 

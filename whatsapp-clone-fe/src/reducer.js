@@ -1,6 +1,7 @@
+import {loadFromLocalStorage} from './localStore'
 
 export const initialState = {
-    user : localStorage.getItem("user")
+    user : loadFromLocalStorage("user")
 }
 
 export const actionTypes = {
