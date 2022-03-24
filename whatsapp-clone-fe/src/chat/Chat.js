@@ -13,7 +13,7 @@ import { useStateValue } from '../StateProvider'
 const Chat = ({messages}) =>{
     const {roomId} = useParams()
     const [roomName, setRoomName] = useState("")
-    const [lastSeen, setLastSeen] = useState("Visto l'ultima volta...")
+    const [lastSeen, setLastSeen] = useState("")
     const [input, setInput]= useState("")
     const [{user}, dispatch] = useStateValue()
     const history = useNavigate()
@@ -23,13 +23,15 @@ const Chat = ({messages}) =>{
            axios.get(`/api/v1/rooms/${roomId}`).then((res)=>{
               let room = res.data.room
               setRoomName(room && room.name)
+              let lastMessage = messages[messages.length -1]
+              setLastSeen(lastMessage?.timestamp)
            }).catch((err)=>{
                setLastSeen("")
                setRoomName("")
                history("/")
            })
         }
-    }, [roomId])
+    }, [roomId, messages])
 
     const sendMessage = async (e) =>{
         e.preventDefault();
@@ -49,7 +51,7 @@ const Chat = ({messages}) =>{
                 <Avatar/>
                 <div className='chatHeaderInfo'>
                     <h3>Nome: {roomName}</h3>
-                    <p>{lastSeen}</p>
+                    <p>Ultimo messaggio il: {new Date(lastSeen).toLocaleString()}</p>
                 </div>
                 <div className='chatHeaderRight'>
                     <IconButton>
