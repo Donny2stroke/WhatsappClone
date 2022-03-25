@@ -10,6 +10,7 @@ import axios from "../axios"
 import { useNavigate, useParams } from 'react-router-dom';
 import { useStateValue } from '../StateProvider'
 import Pusher from 'pusher-js'
+import { actionTypes } from '../reducer';
 
 const Chat = () =>{
     const {roomId} = useParams()
@@ -21,7 +22,7 @@ const Chat = () =>{
 
 
     const [input, setInput]= useState("")
-    const [{user}, dispatch] = useStateValue()
+    const [{user, rooms}, dispatch] = useStateValue()
     const history = useNavigate()
 
     useEffect(() =>{
@@ -50,6 +51,13 @@ const Chat = () =>{
               let lastMessage = messages[messages.length -1]
               setLastSeen(lastMessage?.timestamp)
 
+              dispatch({
+                  type: actionTypes.SET_ROOM,
+                  _id: room._id,
+                  name: room.name,
+                  notify: 0
+                })
+
            }).catch((err)=>{
                setLastSeen("")
                setRoomName("")
@@ -71,7 +79,7 @@ const Chat = () =>{
     }
 
     return(
-        <div className='chat'>
+        <div className='chat' key={roomId}>
             <div className='chatHeader'>
                 <Avatar/>
                 <div className='chatHeaderInfo'>

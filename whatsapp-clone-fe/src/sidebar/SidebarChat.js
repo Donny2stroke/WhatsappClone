@@ -23,14 +23,17 @@ const SidebarChat = ({room}) =>{
 
     return (
         <Link to={`stanza/${room._id}`}>
-        <div>
-            <div className='sidebarChat'>
+        <div className='sidebarChat'>
+            <div className='sidebarChatLeft'>
                 <Avatar src={`https://avatars.dicebear.com/api/adventurer/${seed}.svg`}/>
                 <div className='sidebarChatInfo'>
                     <h2>Nome: {room.name}</h2>
                     <p>{ultimoMessaggio}</p>
                 </div>
             </div>
+            {/*<div className='sidebarChatRight'>
+                <p>1</p>
+            </div> */}
         </div>
         </Link>
     )

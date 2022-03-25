@@ -52,7 +52,9 @@ db.once("open",  () =>{
                 'name'      : lastMessage.name,
                 'message'   : lastMessage.message,
                 'timestamp' : lastMessage.timestamp,
-                'uid'       : lastMessage.uid
+                'uid'       : lastMessage.uid,
+                '_id'       : lastMessage._id,
+                'room_id'   : roomId
             });
         }else{
             console.log("Non è stata fatta una update")

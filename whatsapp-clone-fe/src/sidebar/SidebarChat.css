@@ -1,29 +1,44 @@
-a{
-    text-decoration: none;
-    color: black;
-}
-
-.sidebarChat{
-    display: flex;
-    padding: 20px;
+.sidebarChat {
+    display : flex;
+    padding : 20px;
     cursor: pointer;
-    border-bottom: 1px solid #f6f6f6;
+    border-bottom: 1px solide #f6f6f6;
 }
 
-.sidebarChat:hover{
-    background-color: #cbc6c675;
+.sidebarChat:hover {
+    background-color: #ebebeb;
 }
 
-.sidebarChatInfo{
-    margin-left: 15px;
-}
-
-.sidebarChatInfo > h2{
+.sidebarChatInfo > h2 {
     font-size: 16px;
     margin-bottom: 8px;
 }
-
-.sidebarChatInfo > p{
-    color: gray;
-
+.sidebarChatInfo {
+    margin-left: 15px;
 }
+
+.sidebarChatLeft {
+    display: flex;
+  }
+  
+  .sidebarChatRight {
+    display: flex;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    background-color: greenyellow;
+    border-radius: 100%;
+    padding: 4px;
+  }
+  
+  .sidebarChatRight > p {
+    margin: 0 auto;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  
