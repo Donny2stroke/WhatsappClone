@@ -22,7 +22,7 @@ const SidebarChat = ({room}) =>{
     },[])
 
     return (
-        <Link to={`stanza/${room._id}`}>
+        <Link to={`/stanza/${room._id}`}>
         <div className='sidebarChat'>
             <div className='sidebarChatLeft'>
                 <Avatar src={`https://avatars.dicebear.com/api/adventurer/${seed}.svg`}/>

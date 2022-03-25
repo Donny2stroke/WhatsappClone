@@ -14,7 +14,7 @@ const pusher = new Pusher({
 });
 
 const app = express()
-const port = process.env.NODE_PORT || 9000;
+const port = process.env.PORT || 9000;
 
 //middleware già scritto per l'elaborazione dei json
 app.use(express.json())
