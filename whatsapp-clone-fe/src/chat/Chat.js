@@ -55,7 +55,8 @@ const Chat = () =>{
                   type: actionTypes.SET_ROOM,
                   _id: room._id,
                   name: room.name,
-                  notify: 0
+                  notify: 0,
+                  lastMessage: lastMessage
                 })
 
            }).catch((err)=>{
