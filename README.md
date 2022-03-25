@@ -17,5 +17,5 @@ Andare nella cartella whatsapp-clone-fe e digitare il comando npm run start (loc
 Andare nella cartella whatsapp-clone-be e digitare il comando npm run start (localhost:9000)
 Andare a modificare nel seguente file /whatsapp-clone-fe/src/axios.js la variabile "baseURL" decommentando il localhost e commentando quella di hiroku
 
-Link backend: https://whatsapp-clone-claudio.herokuapp.com/
+Link backend: https://whatsapp-clone-claudio.herokuapp.com/ \r\n
 Link progetto funzionante: https://whatsappclone-1eaf8.web.app/
