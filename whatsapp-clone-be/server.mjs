@@ -22,7 +22,8 @@ app.use(express.json())
 app.use(cors())
 
 //DATABASE
-const connectionDbUrl = "mongodb+srv://admin:Igb9ACZoFLVhcb00@cluster0.klh0p.mongodb.net/whatsappwebdb?retryWrites=true&w=majority"
+//const connectionDbUrl = "mongodb+srv://admin:Igb9ACZoFLVhcb00@cluster0.klh0p.mongodb.net/whatsappwebdb?retryWrites=true&w=majority"
+const connectionDbUrl = "mongodb+srv://admin:aM6grlQv0vBxfzv6@cluster0.klh0p.mongodb.net/?retryWrites=true&w=majority"
 
 mongoose.connect(connectionDbUrl, {useNewUrlParser: true, useUnifiedTopology: true}, (error) =>{
     //if(!error) console.log("Connessione al db avvenuta con successo")
